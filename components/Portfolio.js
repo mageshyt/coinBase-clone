@@ -6,7 +6,6 @@ import Coin from "./Coin.js";
 import BalanceChart from "./BalanceChart.js";
 
 const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
-  const [coins, setCoins] = useState([]);
   const [balance, setBalance] = useState(0);
 
   const tokenToUsd = {};
@@ -14,11 +13,24 @@ const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
   for (const token of SanityToken) {
     tokenToUsd[token.contractAddress] = Number(token.usdPrice);
   }
-  console.log(tokenToUsd);
+
+  useEffect(() => {
+    const calculateBalance = async () => {
+      const totalBalance = await Promise.all(
+        ThirdWebToken.map(async (token) => {
+          const balance = await token.balanceOf(WalletAddress);
+          return Number(balance.displayValue) * tokenToUsd[token.address];
+        })
+      );
+      console.log(totalBalance);
+      setBalance(totalBalance.reduce((a, b) => a + b, 0));
+    };
+    return calculateBalance();
+  }, [ThirdWebToken, SanityToken]);
   return (
     <Wrapper className="flex  flex-1 justify-center">
       <Content>
-        <Balance />
+        <Balance amt={balance} />
         <BalanceChart />
         <PortfolioTable>
           {/* Table items */}
@@ -62,7 +74,7 @@ const Balance = ({ amt }) => {
       {/* Balance */}
       <div className="balance">
         <h2 className="text-sm text-gray-500  ">Portfolio Balance</h2>
-        <p className="font-semibold text-lg">$ {} 460009</p>
+        <p className="font-semibold text-lg">$ {amt} </p>
       </div>
     </div>
   );

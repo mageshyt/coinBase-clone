@@ -17,4 +17,7 @@
   .btn-header {
     @apply border-[1px] border-[#282b2f] text-white mr-2 bg-transparent px-4 py-2 rounded-lg hover:bg-gray-900 text-lg;
   }
+  .border-light {
+    @apply border-[1px] border-[#282b2f];
+  }
 }
