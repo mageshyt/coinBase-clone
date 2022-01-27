@@ -39,7 +39,7 @@ const Dashboard = ({ address }) => {
   // console.log("sanity 👉 ", sanityToken);
   // console.log("thirdweb 👉 🥲 ", thirdWebToken);
   return (
-    <Wrapper className="flex   overflow-hidden  h-screen w-screen bg-[#0a0b0d] text-white">
+    <Wrapper className="flex   overflow-y-scroll h-screen w-screen bg-[#0a0b0d] text-white">
       {/* header need to be in top */}
       <SiderBar />
       <div className="flex-1">

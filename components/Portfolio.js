@@ -28,7 +28,7 @@ const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
     return calculateBalance();
   }, [ThirdWebToken, SanityToken]);
   return (
-    <Wrapper className="flex  flex-1 justify-center">
+    <Wrapper className="flex   flex-1 justify-center">
       <Content>
         <Balance amt={balance} />
         <BalanceChart />

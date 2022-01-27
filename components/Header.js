@@ -1,11 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-const Header = ({ WalletAddress,SanityToken,ThirdWebToken }) => {
+import Modal from "react-modal";
+import { useRouter } from "next/router";
+import { Link } from "next/link";
+import TransferModal from "./Modal/TransferModal";
+Modal.setAppElement("#__next");
+const Header = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
+  // !route
+  const router = useRouter();
   return (
     <Wrapper className="flex items-center">
       <Title className="text-[2rem] font-semibold flex-1"> Assests</Title>
       <ButtonContainer className="flex">
-        <WalletConnected walletAddress={WalletAddress } />
+        <WalletConnected walletAddress={WalletAddress} />
         <button className="px-4 py-2 text-lg rounded-lg mr-4 bg-blue-500 font-semibold text-black ">
           Buy / sell
         </button>

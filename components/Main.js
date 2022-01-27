@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Promos from "./Promos";
 const Main = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
   return (
-    <Wrapper className=" overflow-y-scroll">
+    <Wrapper className="overflow-hidden  overflow-y-scroll">
       <Portfolio
         WalletAddress={WalletAddress}
         SanityToken={SanityToken}
