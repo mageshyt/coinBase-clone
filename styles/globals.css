@@ -20,4 +20,10 @@
   .border-light {
     @apply border-[1px] border-[#282b2f];
   }
+  .option {
+    @apply h-full w-full center text-xl cursor-pointer;
+  }
+  .row {
+    @apply flex items-center justify-between p-4;
+  }
 }

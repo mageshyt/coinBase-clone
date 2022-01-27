@@ -69,12 +69,20 @@ const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
 };
 
 const Balance = ({ amt }) => {
+  //number to money
+  const money = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    // format the number
+    minimumFractionDigits: 0,
+  }).format(amt);
+
   return (
     <div className="border-light px-[1rem] py-[2rem]">
       {/* Balance */}
       <div className="balance">
         <h2 className="text-sm text-gray-500  ">Portfolio Balance</h2>
-        <p className="font-semibold text-lg">$ {amt} </p>
+        <p className="font-semibold text-lg"> {money} </p>
       </div>
     </div>
   );
