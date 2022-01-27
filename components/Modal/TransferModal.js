@@ -1,22 +1,55 @@
 import React, { useState, useRef, createRef } from "react";
+import CoinSelector from "./CoinSelector";
+import Receiver from "./Receiver";
 import Transfer from "./Transfer";
+import TransferStatus from "./TransferStatus";
 
-const TransferModal = () => {
+const TransferModal = ({ SanityToken, thirdWebToken, walletAddress }) => {
   const [active, setActive] = useState("send");
+  const [selectedSanityToken, setSanityToken] = useState(SanityToken[0]);
 
   // ! for selected modal
   const selectedModal = (option) => {
     switch (option) {
       case "send":
-        return <Transfer />;
+        return (
+          <Transfer
+            selectedToken={selectedSanityToken}
+            setAction={setActive}
+            thirdWebToken={thirdWebToken}
+            walletAddress={walletAddress}
+          />
+        );
+      case "select":
+        return (
+          <CoinSelector
+            setSelectedToken={setSanityToken}
+            selectedToken={selectedSanityToken}
+            setAction={setActive}
+            thirdWebToken={thirdWebToken}
+            walletAddress={walletAddress}
+            sanityToken={SanityToken}
+          />
+        );
+
       case "receive":
-        return <h2>receive</h2>;
+        return (
+          <Receiver
+            setAction={setActive}
+            selectedToken={selectedSanityToken}
+            walletAddress={walletAddress}
+          />
+        );
+      case "transferring":
+        return <TransferStatus status={active} />;
+      case "transferred":
+        return <TransferStatus status={active} />;
       default:
         return <h2>send</h2>;
     }
   };
   return (
-    <div className="h-[35rem] flex flex-col  border-light w-[27rem] text-gray-50  ">
+    <div className="h-[35rem] flex flex-col  border-light w-[28rem] text-gray-50  ">
       <div className="flex h-[5rem]   justify-evenly items-center ">
         <p
           onClick={() => setActive("send")}
@@ -34,7 +67,7 @@ const TransferModal = () => {
               : "option hover:bg-[#111214]  border-light"
           }
         >
-          receive
+          Receive
         </p>
       </div>
       {/* main modal */}

@@ -1,21 +1,73 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaWallet } from "react-icons/fa";
 import styled from "styled-components";
-
-const Transfer = () => {
-  const [amount, setAmount] = useState();
-
+import ImageUrlBuilder from "@sanity/image-url";
+import { client } from "../../lib/sanity";
+const Transfer = ({
+  selectedToken,
+  setAction,
+  thirdWebToken,
+  walletAddress,
+}) => {
+  //   console.log("selectedToken 👉 ", thirdWebToken);
+  const [amount, setAmount] = useState(0);
   //   ! Recipient addresses
   const [recipient, setRecipient] = useState("");
-  console.log("🧾 -->", recipient);
+
+  // ! manage the image ,name symbol state and Sanity token manage
+  const [image, setImage] = useState("");
+  const [name, setName] = useState("");
+  const [symbol, setSymbol] = useState("");
+
+  useEffect(() => {
+    const url = ImageUrlBuilder(client).image(selectedToken.logo).url();
+    setImage(url);
+    setName(selectedToken.name);
+    setSymbol(selectedToken.symbol);
+  }, [selectedToken]);
+
+  // * for Third web token mange
+  const [balance, setBalance] = useState(null);
+  const [ActiveThirdWebToken, setActiveThirdWebToken] = useState();
+  useEffect(() => {
+    const activeThirdWebToken = thirdWebToken.find(
+      (token) => token.address === selectedToken.contractAddress
+    );
+    console.log("activeThirdWebToken 👉 ", activeThirdWebToken);
+    setActiveThirdWebToken(activeThirdWebToken);
+
+    const getBalance = async () => {
+      const balance = await activeThirdWebToken.balanceOf(walletAddress);
+      setBalance(Number(balance.displayValue));
+    };
+    if (activeThirdWebToken) {
+      return getBalance();
+    }
+  }, [thirdWebToken]);
+  // ! send Crypto function
+  const sendCrypto = async (amount, recipient) => {
+    console.log("Crypto 💰 sending........ ");
+    setAction("transferring");
+    if (ActiveThirdWebToken && amount && recipient) {
+      const tx = await ActiveThirdWebToken.transfer(
+        recipient,
+        amount.toString().concat("000000000000000000")
+      );
+      console.log("crypto sent successfully 👉 ", tx);
+      setAction("transferred");
+    } else {
+      alert("Please fill all the fields");
+    }
+  };
+  //   console.log("balance 👉 ", balance);
   return (
     <div className="center flex-col w-full h-full flex-1 ">
       {/* top session */}
       <div className="top__session  flex  flex-1 flex-col">
         <div className="center flex-col">
           <div>
-            {/* valuse should not go less then 0 */}
+            {/* values should not go less then 0 */}
             <FlexInput
               placeholder="0"
               type="number"
@@ -23,17 +75,25 @@ const Transfer = () => {
               value={amount >= 0 ? amount : 0}
               className="font-medium border-none mb-2 mr-1  bg-transparent outline-none text-right max-w-[45%] text-gray-600 text-[60px]"
             />
-            <span className="text-[55px] font-normal text-blue-500">ETH</span>{" "}
+            <span className="text-[55px] font-normal text-blue-500">
+              {symbol}
+            </span>{" "}
           </div>
-          <span
-            className={
-              amount <= 0
-                ? "text-sm pointer-events-none text-gray-600 "
-                : "hidden"
-            }
-          >
-            Amount is a required field
-          </span>
+          {amount > balance ? (
+            <span className="text-sm pointer-events-none text-red-600">
+              You have reached your limit
+            </span>
+          ) : (
+            <span
+              className={
+                amount == 0
+                  ? "text-sm pointer-events-none text-gray-600"
+                  : "hidden"
+              }
+            >
+              Amount is a required field
+            </span>
+          )}
         </div>
       </div>
 
@@ -61,29 +121,41 @@ const Transfer = () => {
           <FieldName className="text-md flex-[0.5] pl-8 text-gray-500">
             Pay with
           </FieldName>
-          <CoinSelect>
+          <CoinSelect
+            className=" cursor-pointer"
+            onClick={() => setAction("select")}
+          >
             <Icon>
-              <img
-                src="https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-512.png"
-                alt="logo"
-                className="w-8 h-8 object-cover"
-              />
+              <img src={image} alt="logo" className="w-8 h-8 object-cover" />
             </Icon>
-            <CoinName>Ethereum</CoinName>
+            <CoinName>{name}</CoinName>
           </CoinSelect>
         </Row>
         <Divider className="border-light" />
         {/* Button */}
       </TransferForm>
       <Row className="w-full">
-        <ContinueButton className="bg-blue-400 w-full p-4 rounded-lg text-center cursor-pointer hover:bg-blue-500">
+        <ContinueButton
+          onClick={() => sendCrypto(amount, recipient)}
+          className={
+            recipient !== walletAddress && amount <= balance
+              ? "bg-blue-400 w-full p-4 rounded-lg text-center cursor-pointer hover:bg-blue-500"
+              : "bg-red-400 w-full p-4 rounded-lg text-center cursor-not-allowed hover:bg-gray-500"
+          }
+        >
           Continue
         </ContinueButton>
       </Row>
       {/* Balance */}
       <Row className="flex items-center justify-between w-full text-sm text-gray-500">
-        <span>BTC Balance</span>
-        <span className="text-gray-500">8 BTC</span>
+        <span>{symbol} Balance</span>
+        {balance ? (
+          <span className="text-gray-500">
+            {balance} {symbol}
+          </span>
+        ) : (
+          <span className="text-gray-500"> Loading...</span>
+        )}
       </Row>
     </div>
   );

@@ -5,7 +5,7 @@ import { coins } from "../static/coins.js";
 import Coin from "./Coin.js";
 import BalanceChart from "./BalanceChart.js";
 
-const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
+const Portfolio = ({ walletAddress, SanityToken, thirdWebToken }) => {
   const [balance, setBalance] = useState(0);
 
   const tokenToUsd = {};
@@ -17,16 +17,15 @@ const Portfolio = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
   useEffect(() => {
     const calculateBalance = async () => {
       const totalBalance = await Promise.all(
-        ThirdWebToken.map(async (token) => {
-          const balance = await token.balanceOf(WalletAddress);
+        thirdWebToken.map(async (token) => {
+          const balance = await token.balanceOf(walletAddress);
           return Number(balance.displayValue) * tokenToUsd[token.address];
         })
       );
-      console.log(totalBalance);
       setBalance(totalBalance.reduce((a, b) => a + b, 0));
     };
     return calculateBalance();
-  }, [ThirdWebToken, SanityToken]);
+  }, [thirdWebToken, SanityToken]);
   return (
     <Wrapper className="flex   flex-1 justify-center">
       <Content>

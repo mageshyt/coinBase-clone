@@ -2,6 +2,7 @@ import { useWeb3 } from "@3rdweb/hooks";
 import styled from "styled-components";
 import ConnectWallet from "../components/ConnectWallet";
 import Dashboard from "./Dashboard";
+
 export default function Home() {
   // ! for connecting to our third web account
   const { address, connectWallet } = useWeb3();

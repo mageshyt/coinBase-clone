@@ -19,9 +19,9 @@ const Dashboard = ({ address }) => {
   // ! to get sanity token
   const [sanityToken, setSanityToken] = useState([]);
   // ! need to get Thirdweb Token
-  const [thirdWebToken, setThirdWebToken] = useState([]);
+  const [thirdWebToken, setthirdWebToken] = useState([]);
   useEffect(() => {
-    const getSanityTokenAndThirdWebToken = async () => {
+    const getSanityTokenAndthirdWebToken = async () => {
       const coins = await fetch(
         "https://vjgvr3vu.api.sanity.io/v1/data/query/production?query=*%5B_type%3D%3D'coins'%5D%7B%0A%20%20name%2C%0A%20%20usdPrice%2C%0A%20%20symbol%2C%0A%20%20logo%2C%0A%20%20contractAddress%0A%7D"
       );
@@ -29,12 +29,12 @@ const Dashboard = ({ address }) => {
 
       setSanityToken(sanityTokens);
       // ! sent the fetch request to third web
-      setThirdWebToken(
+      setthirdWebToken(
         sanityTokens.map((token) => sdk.getTokenModule(token.contractAddress))
       );
     };
 
-    return getSanityTokenAndThirdWebToken();
+    return getSanityTokenAndthirdWebToken();
   }, []);
   // console.log("sanity 👉 ", sanityToken);
   // console.log("thirdweb 👉 🥲 ", thirdWebToken);
@@ -44,13 +44,13 @@ const Dashboard = ({ address }) => {
       <SiderBar />
       <div className="flex-1">
         <Header
-          WalletAddress={address}
-          ThirdWebToken={thirdWebToken}
+          walletAddress={address}
+          thirdWebToken={thirdWebToken}
           SanityToken={sanityToken}
         />
         <Main
-          WalletAddress={address}
-          ThirdWebToken={thirdWebToken}
+          walletAddress={address}
+          thirdWebToken={thirdWebToken}
           SanityToken={sanityToken}
         />
       </div>

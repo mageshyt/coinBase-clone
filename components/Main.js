@@ -2,13 +2,13 @@ import React from "react";
 import Portfolio from "./portfolio";
 import styled from "styled-components";
 import Promos from "./Promos";
-const Main = ({ WalletAddress, SanityToken, ThirdWebToken }) => {
+const Main = ({ walletAddress, SanityToken, thirdWebToken }) => {
   return (
     <Wrapper className="overflow-hidden  overflow-y-scroll">
       <Portfolio
-        WalletAddress={WalletAddress}
+        walletAddress={walletAddress}
         SanityToken={SanityToken}
-        ThirdWebToken={ThirdWebToken}
+        thirdWebToken={thirdWebToken}
       />
       <Promos />
     </Wrapper>
